@@ -642,6 +642,11 @@ import {
   TIdentityLdapAuthsUpdate
 } from "@app/db/schemas/identity-ldap-auths";
 import {
+  TIdentitySpiffeAuths,
+  TIdentitySpiffeAuthsInsert,
+  TIdentitySpiffeAuthsUpdate
+} from "@app/db/schemas/identity-spiffe-auths";
+import {
   TMicrosoftTeamsIntegrations,
   TMicrosoftTeamsIntegrationsInsert,
   TMicrosoftTeamsIntegrationsUpdate
@@ -1069,6 +1074,11 @@ declare module "knex/types/tables" {
       TIdentityLdapAuths,
       TIdentityLdapAuthsInsert,
       TIdentityLdapAuthsUpdate
+    >;
+    [TableName.IdentitySpiffeAuth]: KnexOriginal.CompositeTableType<
+      TIdentitySpiffeAuths,
+      TIdentitySpiffeAuthsInsert,
+      TIdentitySpiffeAuthsUpdate
     >;
     [TableName.IdentityUaClientSecret]: KnexOriginal.CompositeTableType<
       TIdentityUaClientSecrets,
