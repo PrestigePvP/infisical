@@ -63,26 +63,14 @@ const CommonUpdateFields = z
       .array()
       .min(1)
       .describe(SPIFFE_AUTH.UPDATE.accessTokenTrustedIps),
-    accessTokenTTL: z
-      .number()
-      .int()
-      .min(0)
-      .max(315360000)
-      .describe(SPIFFE_AUTH.UPDATE.accessTokenTTL),
-    accessTokenMaxTTL: z
-      .number()
-      .int()
-      .min(0)
-      .max(315360000)
-      .describe(SPIFFE_AUTH.UPDATE.accessTokenMaxTTL),
+    accessTokenTTL: z.number().int().min(0).max(315360000).describe(SPIFFE_AUTH.UPDATE.accessTokenTTL),
+    accessTokenMaxTTL: z.number().int().min(0).max(315360000).describe(SPIFFE_AUTH.UPDATE.accessTokenMaxTTL),
     accessTokenNumUsesLimit: z.number().int().min(0).describe(SPIFFE_AUTH.UPDATE.accessTokenNumUsesLimit)
   })
   .partial();
 
 const StaticConfigurationSchema = z.object({
-  configurationType: z
-    .literal(SpiffeConfigurationType.STATIC)
-    .describe(SPIFFE_AUTH.ATTACH.configurationType),
+  configurationType: z.literal(SpiffeConfigurationType.STATIC).describe(SPIFFE_AUTH.ATTACH.configurationType),
   caBundleJwks: z.string().min(1).describe(SPIFFE_AUTH.ATTACH.caBundleJwks),
   bundleEndpointUrl: z.string().optional().default(""),
   bundleEndpointProfile: z.nativeEnum(SpiffeBundleEndpointProfile).optional(),
@@ -91,9 +79,7 @@ const StaticConfigurationSchema = z.object({
 });
 
 const RemoteConfigurationSchema = z.object({
-  configurationType: z
-    .literal(SpiffeConfigurationType.REMOTE)
-    .describe(SPIFFE_AUTH.ATTACH.configurationType),
+  configurationType: z.literal(SpiffeConfigurationType.REMOTE).describe(SPIFFE_AUTH.ATTACH.configurationType),
   caBundleJwks: z.string().optional().default(""),
   bundleEndpointUrl: z
     .string()
@@ -106,12 +92,7 @@ const RemoteConfigurationSchema = z.object({
     .default(SpiffeBundleEndpointProfile.HTTPS_WEB)
     .describe(SPIFFE_AUTH.ATTACH.bundleEndpointProfile),
   bundleEndpointCaCert: z.string().optional().default("").describe(SPIFFE_AUTH.ATTACH.bundleEndpointCaCert),
-  bundleRefreshHintSeconds: z
-    .number()
-    .int()
-    .min(0)
-    .default(3600)
-    .describe(SPIFFE_AUTH.ATTACH.bundleRefreshHintSeconds)
+  bundleRefreshHintSeconds: z.number().int().min(0).default(3600).describe(SPIFFE_AUTH.ATTACH.bundleRefreshHintSeconds)
 });
 
 export const registerIdentitySpiffeAuthRouter = async (server: FastifyZodProvider) => {

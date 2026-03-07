@@ -28,8 +28,8 @@ import {
 } from "@app/lib/errors";
 import { extractIPDetails, isValidIpOrCidr } from "@app/lib/ip";
 import { logger } from "@app/lib/logger";
-import { blockLocalAndPrivateIpAddresses } from "@app/lib/validator";
 import { AuthAttemptAuthMethod, AuthAttemptAuthResult, authAttemptCounter } from "@app/lib/telemetry/metrics";
+import { blockLocalAndPrivateIpAddresses } from "@app/lib/validator";
 
 import { ActorType, AuthTokenType } from "../auth/auth-type";
 import { TIdentityDALFactory } from "../identity/identity-dal";
@@ -104,7 +104,9 @@ const validateSpiffeClaims = (
 ): boolean => {
   if (!tokenData.aud) return false;
 
-  const tokenAudiences: string[] = Array.isArray(tokenData.aud) ? tokenData.aud : [tokenData.aud as string];
+  const tokenAudiences: string[] = Array.isArray(tokenData.aud)
+    ? (tokenData.aud as string[])
+    : [tokenData.aud as string];
   const allowedAudiences = config.allowedAudiences
     .split(", ")
     .map((a) => a.trim())
@@ -141,13 +143,13 @@ export const identitySpiffeAuthServiceFactory = ({
     config: {
       id: string;
       configurationType: string;
-      encryptedCaBundleJwks: Buffer | null;
-      encryptedCachedBundleJwks: Buffer | null;
-      bundleEndpointUrl: string | null;
-      bundleEndpointProfile: string | null;
-      encryptedBundleEndpointCaCert: Buffer | null;
-      bundleRefreshHintSeconds: number | null;
-      cachedBundleLastRefreshedAt: Date | string | null;
+      encryptedCaBundleJwks?: Buffer | null;
+      encryptedCachedBundleJwks?: Buffer | null;
+      bundleEndpointUrl?: string | null;
+      bundleEndpointProfile?: string | null;
+      encryptedBundleEndpointCaCert?: Buffer | null;
+      bundleRefreshHintSeconds?: number | null;
+      cachedBundleLastRefreshedAt?: Date | string | null;
     };
     orgId: string;
     forceRefresh?: boolean;
@@ -162,7 +164,7 @@ export const identitySpiffeAuthServiceFactory = ({
       if (!config.encryptedCaBundleJwks) {
         throw new BadRequestError({ message: "Static SPIFFE auth has no CA bundle JWKS configured" });
       }
-      
+
       return {
         jwksJson: orgDataKeyDecryptor({ cipherTextBlob: config.encryptedCaBundleJwks }).toString(),
         fromCache: false
@@ -320,7 +322,7 @@ export const identitySpiffeAuthServiceFactory = ({
         return newToken;
       });
 
-      let expireyOptions: { expiresIn: number } | undefined = undefined;
+      let expireyOptions: { expiresIn: number } | undefined;
       const accessTokenTTL = Number(identityAccessToken.accessTokenTTL);
       if (accessTokenTTL > 0) {
         expireyOptions = { expiresIn: accessTokenTTL };
@@ -810,7 +812,13 @@ export const identitySpiffeAuthServiceFactory = ({
     return revokedIdentitySpiffeAuth;
   };
 
-  const refreshSpiffeBundle = async ({ identityId, actorId, actor, actorAuthMethod, actorOrgId }: TGetSpiffeAuthDTO) => {
+  const refreshSpiffeBundle = async ({
+    identityId,
+    actorId,
+    actor,
+    actorAuthMethod,
+    actorOrgId
+  }: TGetSpiffeAuthDTO) => {
     const identityMembershipOrg = await membershipIdentityDAL.getIdentityById({
       scopeData: {
         scope: AccessScope.Organization,

@@ -361,11 +361,7 @@ export const IdentitySpiffeAuthForm = ({
                     isError={Boolean(error)}
                     errorText={error?.message}
                   >
-                    <Input
-                      {...field}
-                      type="text"
-                      placeholder="https://spire-server:8443"
-                    />
+                    <Input {...field} type="text" placeholder="https://spire-server:8443" />
                   </FormControl>
                 )}
               />
@@ -386,10 +382,7 @@ export const IdentitySpiffeAuthForm = ({
                       }}
                       className="w-full"
                     >
-                      <SelectItem
-                        value={SpiffeBundleEndpointProfile.HTTPS_WEB}
-                        key="https_web"
-                      >
+                      <SelectItem value={SpiffeBundleEndpointProfile.HTTPS_WEB} key="https_web">
                         HTTPS Web
                       </SelectItem>
                       <SelectItem

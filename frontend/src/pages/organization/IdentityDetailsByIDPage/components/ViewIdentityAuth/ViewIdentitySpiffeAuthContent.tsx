@@ -27,10 +27,7 @@ export const ViewIdentitySpiffeAuthContent = ({
 
   if (!data) {
     return (
-      <EmptyState
-        icon={faBan}
-        title="Could not find SPIFFE Auth associated with this Identity."
-      />
+      <EmptyState icon={faBan} title="Could not find SPIFFE Auth associated with this Identity." />
     );
   }
 
@@ -98,7 +95,7 @@ export const ViewIdentitySpiffeAuthContent = ({
               side="right"
               className="max-w-xl p-2"
               content={
-                <pre className="rounded-sm bg-mineshaft-600 p-2 whitespace-pre-wrap break-words">
+                <pre className="rounded-sm bg-mineshaft-600 p-2 break-words whitespace-pre-wrap">
                   {data.caBundleJwks}
                 </pre>
               }

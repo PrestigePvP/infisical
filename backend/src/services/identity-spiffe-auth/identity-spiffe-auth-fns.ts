@@ -1,15 +1,15 @@
 import https from "https";
-
 import picomatch from "picomatch";
+import RE2 from "re2";
 
-const SPIFFE_ID_REGEX = /^spiffe:\/\/([^/]+)(\/.*)?$/;
+const SPIFFE_ID_REGEX = new RE2("^spiffe:\\/\\/([^/]+)(\\/.*)?");
 
 export const isValidSpiffeId = (value: string): boolean => {
   return SPIFFE_ID_REGEX.test(value);
 };
 
 export const extractTrustDomainFromSpiffeId = (spiffeId: string): string => {
-  const match = spiffeId.match(SPIFFE_ID_REGEX);
+  const match = SPIFFE_ID_REGEX.exec(spiffeId);
   if (!match) {
     throw new Error(`Invalid SPIFFE ID: ${spiffeId}`);
   }
@@ -26,7 +26,9 @@ export const doesSpiffeIdMatchPattern = (spiffeId: string, patterns: string): bo
 };
 
 export const findSigningKeyInJwks = (jwksJson: string, kid: string) => {
-  const jwks = JSON.parse(jwksJson) as { keys: Array<{ kid?: string; use?: string; kty: string; [key: string]: unknown }> };
+  const jwks = JSON.parse(jwksJson) as {
+    keys: Array<{ kid?: string; use?: string; kty: string; [key: string]: unknown }>;
+  };
 
   if (!jwks.keys || !Array.isArray(jwks.keys)) {
     throw new Error("Invalid JWKS: missing keys array");
