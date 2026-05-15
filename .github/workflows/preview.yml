@@ -8,6 +8,7 @@ on:
       - "!backend/README.md"
       - "!backend/.*"
       - "backend/.eslintrc.js"
+      - ".github/workflows/preview.yml" # TEMP: fork-test only — drop before opening real PR
   workflow_dispatch:
     inputs:
       pr:
@@ -15,7 +16,7 @@ on:
         required: true
         type: number
       sha:
-        description: "Head commit SHA (full 40 chars). Must match an already-pushed infisical/preview_infisical tag."
+        description: "Head commit SHA (full 40 chars). Must match an already-pushed treinfisical/preview_infisical tag."
         required: true
         type: string
       action:
@@ -69,7 +70,7 @@ jobs:
           context: .
           file: Dockerfile.standalone-infisical
           push: true
-          tags: infisical/preview_infisical:${{ steps.sha.outputs.short }}
+          tags: treinfisical/preview_infisical:${{ steps.sha.outputs.short }}
           platforms: linux/amd64
           cache-from: type=gha,scope=preview-infisical
           cache-to: type=gha,mode=max,scope=preview-infisical
